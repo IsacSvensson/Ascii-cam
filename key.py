@@ -26,10 +26,10 @@ class pressedKey:
                     print(self.pressedKey)
                 if keyboard.is_pressed('left'):
                     self.pressedKey = 'left'
-                    self.currentImg.light = self.currentImg.light + 1
+                    self.currentImg.light = self.currentImg.light - 1
                     print(self.pressedKey)
                 if keyboard.is_pressed('right'):
-                    self.currentImg.light = self.currentImg.light - 1
+                    self.currentImg.light = self.currentImg.light + 1
                     self.pressedKey = 'right'
                     print(self.pressedKey)
                 sleep(0.1)

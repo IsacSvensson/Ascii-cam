@@ -7,10 +7,10 @@ class Img:
         self.light = 0
 
     def loadImage(self, img):
-        self.img = img
-        if self.contrast:
-            contrastEnh = ImageEnhance.Contrast(img)
-            contrastEnh.enhance(self.contrast*0.1)
-        if self.light:
-            lightEnh = ImageEnhance.Brightness(img)
-            lightEnh.enhance(self.light*0.1)
+        self.img = img.resize((120,80))
+        if self.contrast != 0:
+            contrastEnh = ImageEnhance.Contrast(self.img)
+            self.img = contrastEnh.enhance(1+self.contrast*0.2)
+        if self.light != 0:
+            lightEnh = ImageEnhance.Brightness(self.img)
+            self.img = lightEnh.enhance(1+self.light*0.2)

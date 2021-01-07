@@ -2,7 +2,7 @@ from font import getWeightedChars, getChar
 
 def generateAsciiImage(imgObj):
     chars = getWeightedChars()
-    img = imgObj.img.resize((120,80))
+    img = imgObj.img
     size = img.size
     pix = img.load()
     val = []
