@@ -1,8 +1,8 @@
 from font import getWeightedChars, getChar
 
-def generateAsciiImage(img):
+def generateAsciiImage(imgObj):
     chars = getWeightedChars()
-    img = img.resize((120,80))
+    img = imgObj.img.resize((120,80))
     size = img.size
     pix = img.load()
     val = []
