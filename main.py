@@ -1,47 +1,50 @@
-from PIL import Image
-import cv2
-from time import sleep
-import sys
-from ascii_art import generateAsciiImage
-from key import *
-# import only system from os 
-from os import system, name 
+"""
+Main module for ASCII-CAM app.
+Reads pictures from webcamera and generates a ASCII-stream in terminal.
+"""
 import threading
+import msvcrt
+from PIL import Image
+from helpers import clear, adjustmentThread, helpMenu, Camera, ThreadArgs
 from image_handler import Img
+from font import generateAsciiImage
 
-def clear(): 
-  
-    # for windows 
-    if name == 'nt': 
-        _ = system('cls') 
-  
-    # for mac and linux(here, os.name is 'posix') 
-    else: 
-        _ = system('clear') 
-
-
-
-def adjustmentThread(key):
-    key.listen()
 
 def main():
-    camera = cv2.VideoCapture(0)
+    """
+    Main function for app handles camera, creating of thread and
+    """
+    camera = Camera()
     img = Img()
-    key = pressedKey()
+    threadArgs = ThreadArgs()
 
-    key.currentImg = img
-    thread = threading.Thread(target=adjustmentThread, args=(key,))
+    # Include img object in threadArgs to be able to change settings from thread
+    threadArgs.currentImg = img
+    # Create and start thread
+    thread = threading.Thread(target=adjustmentThread, args=(threadArgs,))
     thread.start()
-    while key.status:
-        return_value, image = camera.read()
-
-        cv2.imwrite('image.png', image)
-            
-        img.loadImage(Image.open("image.png"))
+    helpMenu()
+    while threadArgs.status:
+    # Status sets to false when pressing 'q'
+        if threadArgs.pressedKey == 'h':
+            # Flushes input buffer
+            while msvcrt.kbhit():
+                msvcrt.getch()
+            helpMenu()
+            threadArgs.pressedKey = None
+        if not camera.takePhoto():
+            # If error accured exit program
+            threadArgs.status = False
+            break
+        imgFile = Image.open("image.png")
+        img.loadImage(imgFile)
         asciiImage = generateAsciiImage(img)
         clear()
         print(asciiImage)
-    del(camera)
+    camera.destroy()
+    # Flushes input buffer
+    while msvcrt.kbhit():
+        msvcrt.getch()
 
 if __name__ == "__main__":
     main()
