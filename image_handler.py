@@ -23,7 +23,7 @@ class Img:
         Params:
             Image: img - PIL.Image.Image object
         """
-        self.img = img.resize((self.size,self.size))
+        self.img = img.resize((self.size, self.size))
         if self.contrast != 0:
             contrastEnh = ImageEnhance.Contrast(self.img)
             self.img = contrastEnh.enhance(1+self.contrast*0.2)

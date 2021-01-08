@@ -1,11 +1,11 @@
 """
 Module for handling weighting chars and drawing the ascii-picture
 """
-from PIL import Image,ImageDraw,ImageFont
 import string
+from PIL import Image, ImageDraw, ImageFont
 
 
-def distributeWeights(chars, minInterval = 0, maxInterval = 255):
+def distributeWeights(chars, minInterval=0, maxInterval=255):
     """
     Distributes the wheighted characters over the given interval
     Returns a list of tuples countaining the weighted characters
@@ -24,10 +24,14 @@ def distributeWeights(chars, minInterval = 0, maxInterval = 255):
             minValue = char[0]
         if maxValue < char[0]:
             maxValue = char[0]
-    
+
     toRet = []
+    # Distribute values between minInterval and maxInterval
+    # (minIntv + (unDistWeight - minVal)*(maxIntv-minIntv)/(maxVal-minVal)
     for char in chars:
-        toRet.append((minInterval + (char[0] - minValue)*(maxInterval-minInterval)/(maxValue-minValue), char[1]))
+        weight = minInterval + (char[0] - minValue)*(maxInterval-minInterval)
+        weight = weight / (maxValue-minValue)
+        toRet.append((weight, char[1]))
     return toRet
 
 def getGeneralSize(chars, font):
@@ -56,7 +60,7 @@ def getGeneralSize(chars, font):
 
 def getWeightedChars():
     """
-    Creates a list of all printable characters, calculates the "blackness" of 
+    Creates a list of all printable characters, calculates the "blackness" of
     the characters and then create and return a distibuted list of the characters
 
     Returns:
@@ -67,18 +71,18 @@ def getWeightedChars():
     generalWidth, generalHeight = getGeneralSize(printables, font)
 
     chars = []
-    for char in printables:
+    for count, char in enumerate(printables):
         # calculate darkness of the img
         canvas = Image.new('RGB', (generalWidth, generalHeight), "white")
         draw = ImageDraw.Draw(canvas)
-        draw.text((0,0), char, 'black', font)
+        draw.text((0, 0), char, 'black', font)
         pixels = canvas.load()
         totalSum = int()
         for i in range(generalWidth):
             for j in range(generalHeight):
-                totalSum = totalSum + sum(pixels[i,j])
+                totalSum = totalSum + sum(pixels[i, j])
         totalSum = totalSum / (generalHeight*generalWidth*3)
-        if (totalSum > 190 and totalSum < 191):
+        if count == 95:
             break
         chars.append((abs(totalSum-255), char))
     chars.sort()
@@ -89,8 +93,8 @@ def getChar(val, chars):
     """
     Gets a character whith the corresponding "blackness" to the pixel
 
-    Params: 
-        Numeric value: val - value to match to characters 
+    Params:
+        Numeric value: val - value to match to characters
         List: chars - weighted characters list
     Returns:
         String: Containg one single character

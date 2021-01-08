@@ -2,10 +2,10 @@
 Contains diverse functions for app
 """
 from os import system, name
-import cv2
-import keyboard  # using module keyboard
-from image_handler import Img
 from time import sleep
+import cv2
+import keyboard
+from image_handler import Img
 
 class ThreadArgs:
     """
@@ -112,7 +112,7 @@ def adjustmentThread(args):
     Function for the thread
 
     Params:
-        ThreadArgs: args - object of class ThreadArgs 
+        ThreadArgs: args - object of class ThreadArgs
     """
     args.listen()
 
