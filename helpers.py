@@ -5,9 +5,31 @@ from os import system, name
 from time import sleep
 import cv2
 import keyboard
+from PIL import Image
 from image_handler import Img
 
-class ThreadArgs:
+class CameraThreadArgs:
+    """
+    Class for handling args for camera thread.
+    """
+    def __init__(self, img, settings):
+        self.camera = Camera()
+        self.img = img
+        self.setArgs = settings
+    def startCam(self):
+        """
+        Continuisly takes new photos til the user press 'q'
+        """
+        while self.setArgs.status:
+            if not self.camera.takePhoto():
+            # If error accured exit program
+                self.setArgs.status = False
+                break
+            imgFile = Image.open("image.png")
+            self.img.loadImage(imgFile)
+        self.camera.destroy()
+
+class SettingThreadArgs:
     """
     Class for handling connetion between main thread and settings thread
     """
@@ -28,43 +50,33 @@ class ThreadArgs:
             if keyboard.is_pressed('q'):
                 self.status = False
                 self.pressedKey = 'q'
-                print(self.pressedKey)
                 break
             if keyboard.is_pressed('up'):
                 self.pressedKey = 'up'
                 self.currentImg.contrast = self.currentImg.contrast + 1
-                print(self.pressedKey)
             if keyboard.is_pressed('down'):
                 self.currentImg.contrast = self.currentImg.contrast - 1
                 self.pressedKey = 'down'
-                print(self.pressedKey)
             if keyboard.is_pressed('left'):
                 self.pressedKey = 'left'
                 self.currentImg.light = self.currentImg.light - 1
-                print(self.pressedKey)
             if keyboard.is_pressed('right'):
                 self.currentImg.light = self.currentImg.light + 1
                 self.pressedKey = 'right'
-                print(self.pressedKey)
             if keyboard.is_pressed('h'):
                 self.pressedKey = 'h'
-                print(self.pressedKey)
             if keyboard.is_pressed('+'):
                 self.currentImg.size = self.currentImg.size + 10
                 self.pressedKey = '+'
-                print(self.pressedKey)
             if keyboard.is_pressed('-'):
                 self.currentImg.size = self.currentImg.size - 10
                 self.pressedKey = '-'
-                print(self.pressedKey)
             if keyboard.is_pressed('.'):
                 self.currentImg.size = self.currentImg.size + 10
                 self.pressedKey = '.'
-                print(self.pressedKey)
             if keyboard.is_pressed(','):
                 self.currentImg.size = self.currentImg.size - 10
                 self.pressedKey = ','
-                print(self.pressedKey)
             sleep(0.1)
 
 class Camera:
@@ -75,7 +87,7 @@ class Camera:
         """
         Inits Camera class
         """
-        self.camObj = cv2.VideoCapture(0)
+        self.camObj = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     def takePhoto(self):
         """
         Takes a snapshot with camera and saves to disk
@@ -95,6 +107,12 @@ class Camera:
         """
         self.camObj.release()
         cv2.destroyAllWindows()
+
+def cameraThread(camArgs):
+    """
+    Func for camera thread
+    """
+    camArgs.startCam()
 
 def clear():
     """

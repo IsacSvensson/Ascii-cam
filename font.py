@@ -108,7 +108,7 @@ def getChar(val, chars):
     return chars[minDif[1]][1]
 
 
-def generateAsciiImage(imgObj):
+def generateAsciiImage(imgObj, chars):
     """
     Functions for generating the ascii picture
 
@@ -117,7 +117,6 @@ def generateAsciiImage(imgObj):
     Returns:
         String: Containing the picture as ASCII-art
     """
-    chars = getWeightedChars()
     img = imgObj.img
     size = img.size
     pix = img.load()
@@ -131,6 +130,6 @@ def generateAsciiImage(imgObj):
     for i in range(0, size[1]):
         row = str()
         for j in range(0, size[0]):
-            row = row + getChar(val[i][j], chars)*2
+            row = row + getChar(val[i][j], chars)*3
         toPrint = toPrint + '\n' + row
     return toPrint
