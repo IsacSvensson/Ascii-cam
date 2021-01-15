@@ -6,7 +6,7 @@ import threading
 import msvcrt
 from helpers import clear, adjustmentThread, helpMenu, SettingThreadArgs, \
     CameraThreadArgs, cameraThread
-from image_handler import Img
+from imageHandler import Img
 from font import generateAsciiImage, getWeightedChars
 
 

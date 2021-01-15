@@ -6,7 +6,7 @@ from time import sleep
 import cv2
 import keyboard
 from PIL import Image
-from image_handler import Img
+from imageHandler import Img
 
 class CameraThreadArgs:
     """
@@ -95,8 +95,8 @@ class Camera:
         Returns:
             Bool: True if success, False if Error
         """
-        return_value, image = self.camObj.read()
-        if not return_value:
+        returnValue, image = self.camObj.read()
+        if not returnValue:
             print("Error: Could not read camera")
             return False
         cv2.imwrite('image.png', image)
