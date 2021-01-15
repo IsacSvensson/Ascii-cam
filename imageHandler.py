@@ -16,6 +16,36 @@ class Img:
         self.light = 0
         self.size = 180
 
+    def adjustLight(self, num):
+        """
+        Adjusts light with num
+
+        Params:
+            num: Value to adjust light by
+        """
+        self.light += num
+
+    def adjustContrast(self, num):
+        """
+        Adjusts contrast with num
+
+        Params:
+            num: Value to adjust contrast by
+        """
+        self.contrast += num
+
+    def adjustSize(self, num):
+        """
+        Adjusts size with num
+
+        Params:
+            num: Value to adjust size by
+        """
+        if self.size + num <= 1:
+            self.size = 1
+            return
+        self.size += num
+
     def loadImage(self, img):
         """
         Loads the new image and executes current settings

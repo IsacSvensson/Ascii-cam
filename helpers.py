@@ -3,6 +3,7 @@ Contains diverse functions for app
 """
 from os import system, name
 from time import sleep
+import msvcrt
 import cv2
 import keyboard
 from PIL import Image
@@ -53,29 +54,29 @@ class SettingThreadArgs:
                 break
             if keyboard.is_pressed('up'):
                 self.pressedKey = 'up'
-                self.currentImg.contrast = self.currentImg.contrast + 1
+                self.currentImg.adjustContrast(1)
             if keyboard.is_pressed('down'):
-                self.currentImg.contrast = self.currentImg.contrast - 1
+                self.currentImg.adjustContrast(-1)
                 self.pressedKey = 'down'
             if keyboard.is_pressed('left'):
                 self.pressedKey = 'left'
-                self.currentImg.light = self.currentImg.light - 1
+                self.currentImg.adjustLight(-1)
             if keyboard.is_pressed('right'):
-                self.currentImg.light = self.currentImg.light + 1
+                self.currentImg.adjustLight(1)
                 self.pressedKey = 'right'
             if keyboard.is_pressed('h'):
                 self.pressedKey = 'h'
             if keyboard.is_pressed('+'):
-                self.currentImg.size = self.currentImg.size + 10
+                self.currentImg.adjustSize(10)
                 self.pressedKey = '+'
             if keyboard.is_pressed('-'):
-                self.currentImg.size = self.currentImg.size - 10
+                self.currentImg.adjustSize(-10)
                 self.pressedKey = '-'
             if keyboard.is_pressed('.'):
-                self.currentImg.size = self.currentImg.size + 10
+                self.currentImg.adjustSize(1)
                 self.pressedKey = '.'
             if keyboard.is_pressed(','):
-                self.currentImg.size = self.currentImg.size - 10
+                self.currentImg.adjustSize(-1)
                 self.pressedKey = ','
             sleep(0.1)
 
@@ -173,3 +174,10 @@ def helpMenu():
     print(menu)
     input()
     clear()
+
+def flushBuffer():
+    """
+    Flushes input buffer
+    """
+    while msvcrt.kbhit():
+        msvcrt.getch()
