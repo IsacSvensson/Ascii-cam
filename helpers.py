@@ -2,8 +2,8 @@
 Contains diverse functions for app
 """
 from os import system, name
+from sys import stdin
 from time import sleep
-import msvcrt
 import cv2
 import keyboard
 from PIL import Image
@@ -78,6 +78,9 @@ class SettingThreadArgs:
             if keyboard.is_pressed(','):
                 self.currentImg.adjustSize(-1)
                 self.pressedKey = ','
+            if keyboard.is_pressed('r'):
+                self.currentImg.setDefaultSettings()
+                self.pressedKey = 'r'
             sleep(0.1)
 
 class Camera:
@@ -166,6 +169,8 @@ def helpMenu():
       -         - Decrease size (by 10)
       .         - Increase size (by 1)
       ,         - Decrease size (by 1)
+      r         - Reset to default settings
+      q         - Exit program
 
     Press Enter to go back to camera-mode
     """
@@ -179,5 +184,10 @@ def flushBuffer():
     """
     Flushes input buffer
     """
-    while msvcrt.kbhit():
-        msvcrt.getch()
+    try:
+        import sys, termios
+        termios.tcflush(sys.stdin, termios.TCIOFLUSH)
+    except ImportError:
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getch()

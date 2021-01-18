@@ -7,6 +7,7 @@ class Img:
     """
     Class for handling the current image
     """
+        
     def __init__(self):
         """
         Inits Img class
@@ -14,7 +15,12 @@ class Img:
         self.img = None
         self.contrast = 0
         self.light = 0
-        self.size = 180
+        self.size = 70
+
+    def setDefaultSettings(self):
+        self.contrast = 0
+        self.light = 0
+        self.size = 70
 
     def adjustLight(self, num):
         """
