@@ -125,7 +125,7 @@ def generateAsciiImage(imgObj, chars):
     for i in range(0, size[1]):
         val.append([])
         for j in range(0, size[0]):
-            val[i].append((pix[j, i][0]*0.299 + pix[j, i][1]*0.587 + pix[j, i][2]*0.114))
+            val[i].append((pix[j, i]))
 
     toPrint = str()
     for i in range(0, size[1]):
