@@ -67,6 +67,7 @@ def getWeightedChars():
         List: Containing tuples with weight and the character
     """
     printables = string.printable
+    printables += " "
     font = ImageFont.truetype("consola.ttf", 28, encoding="unic")
     generalWidth, generalHeight = getGeneralSize(printables, font)
 

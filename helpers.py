@@ -6,7 +6,8 @@ from sys import stdin
 from time import sleep
 import cv2
 import keyboard
-from PIL import Image
+import numpy as np
+from PIL import Image, ImageOps
 from imageHandler import Img
 
 class CameraThreadArgs:
@@ -27,8 +28,8 @@ class CameraThreadArgs:
             if not success:
                 self.setArgs.status = False
                 break
-            imgFile = Image.open("image.png")
-            self.img.loadImage(imgFile)
+            im_pil = ImageOps.grayscale(Image.fromarray(img))
+            self.img.loadImage(im_pil)
         self.camera.destroy()
 
 class SettingThreadArgs:
@@ -104,8 +105,7 @@ class Camera:
         if not returnValue:
             print("Error: Could not read camera")
             return False
-        cv2.imwrite('image.png', image)
-        return True
+        return True, image
     def destroy(self):
         """
         Destroys cameraobject
