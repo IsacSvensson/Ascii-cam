@@ -22,8 +22,9 @@ class CameraThreadArgs:
         Continuisly takes new photos til the user press 'q'
         """
         while self.setArgs.status:
-            if not self.camera.takePhoto():
+            success, img = self.camera.takePhoto()
             # If error accured exit program
+            if not success:
                 self.setArgs.status = False
                 break
             imgFile = Image.open("image.png")
