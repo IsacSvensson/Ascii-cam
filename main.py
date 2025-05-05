@@ -1,40 +1,29 @@
-"""
-Main module for ASCII-CAM app.
-Reads pictures from webcamera and generates a ASCII-stream in terminal.
-"""
 import threading
-from helpers import clear, adjustmentThread, helpMenu, SettingThreadArgs, \
-    CameraThreadArgs, cameraThread, flushBuffer
-from imageHandler import Img
-from font import generateAsciiImage, getWeightedChars
+from helpers import clear, adjustment_thread, help_menu, SettingThreadArgs, CameraThreadArgs, camera_thread, clear_console
+from image_handler import Img
+from font_utils import AsciiFont
 
 
 def main():
-    """
-    Main function for app handles camera, creating of thread and
-    """
     img = Img()
-    settingThreadArgs = SettingThreadArgs()
-    chars = getWeightedChars()
-    # Include img object in threadArgs to be able to change settings from thread
-    settingThreadArgs.currentImg = img
-    camThreadArgs = CameraThreadArgs(img, settingThreadArgs)
-    # Create and start thread
-    settingsThread = threading.Thread(target=adjustmentThread, args=(settingThreadArgs,))
-    camThread = threading.Thread(target=cameraThread, args=(camThreadArgs,))
-    settingsThread.start()
-    camThread.start()
-    helpMenu()
-    while settingThreadArgs.status:
-    # Status sets to false when pressing 'q'
-        if settingThreadArgs.pressedKey == 'h':
-            flushBuffer()
-            helpMenu()
-            settingThreadArgs.pressedKey = None
-        asciiImage = generateAsciiImage(img, chars)
+    setting_args = SettingThreadArgs()
+    font = AsciiFont("consola.ttf", size=28)
+    setting_args.currentImg = img
+    cam_args = CameraThreadArgs(img, setting_args)
+
+    threading.Thread(target=adjustment_thread, args=(setting_args,), daemon=True).start()
+    threading.Thread(target=camera_thread, args=(cam_args,), daemon=True).start()
+
+    help_menu()
+    while setting_args.status:
+        if setting_args.pressedKey == 'h':
+            clear_console()
+            help_menu()
+            setting_args.pressedKey = None
         clear()
-        print(asciiImage)
-    flushBuffer()
+        print(font.render_ascii(img))
+    clear_console()
+
 
 if __name__ == "__main__":
     main()
