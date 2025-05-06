@@ -74,7 +74,7 @@ def adjustment_thread(args):
     args.listen()
 
 def clear():
-    system('cls' if name == 'nt' else 'clear')
+    clear_console()
 
 def help_menu():
     print("""
