@@ -1,6 +1,7 @@
 import string
 from bisect import bisect_left
 from PIL import Image, ImageDraw, ImageFont
+from functools import cache
 
 class AsciiFont:
     def __init__(self, font_path, size=28):
@@ -20,6 +21,7 @@ class AsciiFont:
         values = [(v, c) for v, c in weighted]
         return values
 
+    @cache
     def get_char(self, val):
         idx = bisect_left([w[0] for w in self.chars], val)
         idx = min(idx, len(self.chars) - 1)
